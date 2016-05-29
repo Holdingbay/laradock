@@ -28,11 +28,8 @@ services:
         build: ./data
         volumes:
             - /var/lib/mysql
-            - /var/lib/postgres
-            - /var/lib/mariadb
             - /var/lib/redis
             - /var/lib/memcached
-            - /var/lib/neo4j/data
 
 ### Nginx Server Container ##################################
 
@@ -61,45 +58,6 @@ services:
             MYSQL_USER: homestead
             MYSQL_PASSWORD: secret
             MYSQL_ROOT_PASSWORD: root
-
-### PostgreSQL Container ####################################
-
-    postgres:
-        build: ./postgres
-        volumes_from:
-            - data
-        ports:
-            - "5432:5432"
-        environment:
-            POSTGRES_DB: homestead
-            POSTGRES_USER: homestead
-            POSTGRES_PASSWORD: secret
-
-### MariaDB Container #######################################
-
-    mariadb:  
-        build: ./mariadb
-        volumes_from:
-            - data
-        ports:
-            - "3306:3306"
-        environment:
-            MYSQL_DATABASE: homestead
-            MYSQL_USER: homestead
-            MYSQL_PASSWORD: secret
-            MYSQL_ROOT_PASSWORD: root
-
-### Neo4j Container #########################################
-
-    neo4j:
-        build: ./neo4j
-        ports:
-            - "7474:7474"
-            - "1337:1337"
-        environment:
-            - NEO4J_AUTH=homestead:secret
-        volumes_from:
-            - data
 
 ### Redis Container #########################################
 
