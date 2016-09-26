@@ -5,16 +5,16 @@ services:
 ### PHP-FPM Container #######################################
 
     php-fpm:
+        restart: always
         build:
             context: ./php-fpm
-            dockerfile: Dockerfile-70
+            dockerfile: Dockerfile-70-Ubuntu
         volumes_from:
             - application
         expose:
             - "9000"
         links:
             - workspace
-        restart: always
 
 ### Laravel Application Code Container ######################
 
@@ -29,12 +29,15 @@ services:
         build: ./data
         volumes:
             - /var/lib/mysql
+#            - /var/lib/postgres
+#            - /var/lib/mariadb
             - /var/lib/redis
             - /var/lib/memcached
 
 ### Nginx Server Container ##################################
 
     nginx:
+        restart: always
         build: ./nginx
         volumes_from:
             - application
@@ -45,11 +48,11 @@ services:
             - "443:443"
         links:
             - php-fpm
-        restart: always
 
 ### MySQL Container #########################################
 
     mysql:
+        restart: always
         build: ./mysql
         volumes_from:
             - data
@@ -60,11 +63,38 @@ services:
             MYSQL_USER: homestead
             MYSQL_PASSWORD: secret
             MYSQL_ROOT_PASSWORD: root
-        restart: always
+
+### PostgreSQL Container ####################################
+
+#    postgres:
+#        build: ./postgres
+#        volumes_from:
+#            - data
+#        ports:
+#            - "5432:5432"
+#        environment:
+#            POSTGRES_DB: homestead
+#            POSTGRES_USER: homestead
+#            POSTGRES_PASSWORD: secret
+
+### MariaDB Container #######################################
+
+#    mariadb:  
+#        build: ./mariadb
+#        volumes_from:
+#            - data
+#        ports:
+#            - "3306:3306"
+#        environment:
+#            MYSQL_DATABASE: homestead
+#            MYSQL_USER: homestead
+#            MYSQL_PASSWORD: secret
+#            MYSQL_ROOT_PASSWORD: root
 
 ### Redis Container #########################################
 
     redis:
+        restart: always
         build: ./redis
         volumes_from:
             - data
@@ -74,6 +104,7 @@ services:
 ### Memcached Container #####################################
 
     memcached:
+        restart: always
         build: ./memcached
         volumes_from:
             - data
@@ -85,6 +116,7 @@ services:
 ### Beanstalkd Container ####################################
 
     beanstalkd:
+        restart: always
         build: ./beanstalkd
         ports:
             - "11300:11300"
@@ -95,6 +127,7 @@ services:
 ### Beanstalkd Console Container ############################
 
     beanstalkd-console:
+        restart: always
         build: ./beanstalkd-console
         ports:
             - "2080:2080"
@@ -104,9 +137,11 @@ services:
 ### Workspace Utilities Container ###########################
 
     workspace:
+        restart: always
         build: ./workspace
         volumes_from:
             - application
         tty: true
 
 ### Add more Containers below ###############################
+

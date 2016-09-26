@@ -33,26 +33,15 @@ RUN apt-get update && apt-get install -y \
         php7.0-sqlite \
         php7.0-sqlite3 \
         php7.0-zip \
+        php7.0-bcmath \
         sqlite3 \
         libsqlite3-dev \
         git \
         curl \
-        vim \
-        nano \
-        nodejs \
-        nodejs-dev \
-        npm
+        vim 
 
 # Clean up, to free some space
 RUN apt-get clean
-
-# Install gulp and bower with NPM
-RUN npm install -g \
-    gulp \
-    bower
-
-# Add a symbolic link for Node
-RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 # Add an alias for PHPUnit
 RUN echo "alias phpunit='./vendor/bin/phpunit'" >> ~/.bashrc
@@ -68,10 +57,17 @@ RUN . ~/.bashrc
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN usermod -u 33 www-data
+ADD ./laravel.ini /usr/local/etc/php/conf.d
+ADD ./laravel.pool.conf /usr/local/etc/php-fpm.d/
+
+RUN usermod -u 1000 www-data
 
 WORKDIR /var/www/laravel
 
 #RUN /usr/local/bin/composer.phar install
-RUN php artisan migrate
+#RUN php artisan migrate
+
+CMD ["php-fpm"]
+
+EXPOSE 9000
 
