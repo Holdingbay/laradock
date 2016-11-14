@@ -262,5 +262,5 @@ RUN usermod -u 33 www-data
 WORKDIR /var/www
 
 #RUN /usr/local/bin/composer.phar install
-RUN php artisan migrate
+#RUN php artisan migrate
 
