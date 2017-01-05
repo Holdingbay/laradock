@@ -32,7 +32,7 @@ services:
             - applications
         extra_hosts:
             # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
-            - "dockerhost:10.0.75.1"
+            - "dockerhost:192.168.99.100"
         ports:
            - "2222:22"
         tty: true
