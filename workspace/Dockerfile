@@ -256,5 +256,11 @@ USER root
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+RUN usermod -u 33 www-data
+
 # Set default work directory
 WORKDIR /var/www
+
+#RUN /usr/local/bin/composer.phar install
+RUN php artisan migrate
+

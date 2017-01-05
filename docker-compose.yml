@@ -32,7 +32,7 @@ services:
             - applications
         extra_hosts:
             # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
-            - "dockerhost:10.0.75.1"
+            - "dockerhost:192.168.99.100"
         ports:
            - "2222:22"
         tty: true
@@ -40,6 +40,7 @@ services:
 ### PHP-FPM Container #######################################
 
     php-fpm:
+        restart: always
         build:
             context: ./php-fpm
             args:
@@ -50,6 +51,7 @@ services:
                 - INSTALL_OPCACHE=false
                 - INSTALL_AEROSPIKE_EXTENSION=false
                 - CODEIGNITER=false
+#            dockerfile: Dockerfile-70-Ubuntu
             dockerfile: Dockerfile-70
         volumes_from:
             - applications
@@ -59,7 +61,7 @@ services:
             - workspace
         extra_hosts:
             # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
-            - "dockerhost:10.0.75.1"
+            - "dockerhost:192.168.99.100"
         environment:
             # IMPORTANT: Set the Remote Interpreter entry matching name to `laravel`
             - PHP_IDE_CONFIG=serverName=laravel
@@ -67,6 +69,7 @@ services:
 ### Nginx Server Container ##################################
 
     nginx:
+        restart: always
         build:
             context: ./nginx
             args:
@@ -112,6 +115,7 @@ services:
 ### MySQL Container #########################################
 
     mysql:
+        restart: always
         build: ./mysql
         volumes:
             - mysql:/var/lib/mysql
@@ -187,6 +191,7 @@ services:
 ### Redis Container #########################################
 
     redis:
+        restart: always
         build: ./redis
         volumes:
             - redis:/data
@@ -211,6 +216,7 @@ services:
 ### Memcached Container #####################################
 
     memcached:
+        restart: always
         build: ./memcached
         volumes:
             - memcached:/var/lib/memcached
@@ -222,6 +228,7 @@ services:
 ### Beanstalkd Container ####################################
 
     beanstalkd:
+        restart: always
         build: ./beanstalkd
         ports:
             - "11300:11300"
@@ -247,6 +254,7 @@ services:
 ### Beanstalkd Console Container ############################
 
     beanstalkd-console:
+        restart: always
         build: ./beanstalkd-console
         ports:
             - "2080:2080"
