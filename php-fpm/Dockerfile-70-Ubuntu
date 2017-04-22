@@ -15,6 +15,31 @@ ENV TERM xterm
 RUN apt-get update && apt-get install -y \
     software-properties-common
 
+#
+#--------------------------------------------------------------------------
+# Software's Installation
+#--------------------------------------------------------------------------
+#
+# Installing tools and PHP extentions using "apt", "docker-php", "pecl",
+#
+
+# Install "curl", "libmemcached-dev", "libpq-dev", "libjpeg-dev",
+#         "libpng12-dev", "libfreetype6-dev", "libssl-dev", "libmcrypt-dev",
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl \
+        libmemcached-dev \
+        libz-dev \
+        libpq-dev \
+        libjpeg-dev \
+        libpng12-dev \
+        libfreetype6-dev \
+        libssl-dev \
+        libmcrypt-dev
+
+# Install the PHP pdo_mysql extention
+##RUN docker-php-ext-install pdo_mysql
+
 # Add the "PHP 7" ppa
 RUN add-apt-repository -y \
     ppa:ondrej/php
@@ -33,7 +58,9 @@ RUN apt-get update && apt-get install -y \
         php7.0-sqlite \
         php7.0-sqlite3 \
         php7.0-zip \
+        php7.0-gd \
         php7.0-bcmath \
+        php7.0-fpm \
         sqlite3 \
         libsqlite3-dev \
         git \
@@ -62,7 +89,7 @@ ADD ./laravel.pool.conf /usr/local/etc/php-fpm.d/
 
 RUN usermod -u 1000 www-data
 
-WORKDIR /var/www/laravel
+WORKDIR /var/www
 
 #RUN /usr/local/bin/composer.phar install
 #RUN php artisan migrate

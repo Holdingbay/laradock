@@ -14,6 +14,19 @@ FROM laradock/php-fpm:7.0--1.2
 
 MAINTAINER Mahmoud Zalt <mahmoud@zalt.me>
 
+ADD ./99defaultrelease /etc/apt/apt.conf.d/99defaultrelease
+ADD ./stretch.list /etc/apt/sources.list.d/stretch.list
+
+RUN apt-get update && apt-get install -y \ 
+    php7.0-bcmath
+
+RUN apt-get clean
+
+RUN cp /usr/lib/php/20151012/bcmath.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/bcmath.so 
+#COPY /usr/local/lib/php/extensions/no-debug-non-zts-20151012/bcmath.so /usr/lib/php/20151012/bcmath.so
+
+COPY ./bcmath.ini /usr/local/etc/php/conf.d/bcmath.ini
+
 ADD ./laravel.ini /usr/local/etc/php/conf.d
 ADD ./laravel.pool.conf /usr/local/etc/php-fpm.d/
 #
@@ -51,7 +64,7 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; then \
 ;fi
 
 # Copy xdebug configration for remote debugging
-COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+#COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 #####################################
 # MongoDB:
@@ -112,7 +125,7 @@ RUN if [ ${INSTALL_MEMCACHED} = true ]; then \
 ARG INSTALL_AEROSPIKE_EXTENSION=false
 ENV INSTALL_AEROSPIKE_EXTENSION ${INSTALL_AEROSPIKE_EXTENSION}
 # Copy aerospike configration for remote debugging
-COPY ./aerospike.ini /usr/local/etc/php/conf.d/aerospike.ini
+#COPY ./aerospike.ini /usr/local/etc/php/conf.d/aerospike.ini
 RUN if [ ${INSTALL_AEROSPIKE_EXTENSION} = true ]; then \
     # Install the php aerospike extension
     curl -L -o /tmp/aerospike-client-php.tar.gz "https://github.com/luciano-jr/aerospike-client-php/archive/master.tar.gz" \
@@ -137,7 +150,7 @@ RUN if [ ${INSTALL_OPCACHE} = true ]; then \
 ;fi
 
 # Copy opcache configration
-COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+#COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 #####################################
 # Codeigniter Modifications:
@@ -159,8 +172,6 @@ RUN if [ ${CODEIGNITER} = true ]; then \
 ADD ./laravel.ini /usr/local/etc/php/conf.d
 ADD ./laravel.pool.conf /usr/local/etc/php-fpm.d/
 
-#RUN apt-get install -y \
-#    php7.0-bcmath
 
 ## Install Memcached for php 7
 #RUN curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz" \
@@ -175,7 +186,6 @@ RUN rm -r /var/lib/apt/lists/*
 #RUN usermod -u 1000 www-data
 RUN usermod -u 33 www-data
 
-#- WORKDIR /var/www/laravel
 WORKDIR /var/www
 
 CMD ["php-fpm"]
