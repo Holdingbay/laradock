@@ -14,6 +14,19 @@ FROM laradock/workspace:1.2
 
 MAINTAINER Mahmoud Zalt <mahmoud@zalt.me>
 
+ADD ./99defaultrelease /etc/apt/apt.conf.d/99defaultrelease
+ADD ./stretch.list /etc/apt/sources.list.d/stretch.list
+
+RUN apt-get update && apt-get install -y \ 
+    php7.0-bcmath
+
+RUN apt-get clean
+
+RUN cp /usr/lib/php/20151012/bcmath.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/bcmath.so 
+#COPY /usr/local/lib/php/extensions/no-debug-non-zts-20151012/bcmath.so /usr/lib/php/20151012/bcmath.so
+
+COPY ./bcmath.ini /usr/local/etc/php/conf.d/bcmath.ini
+
 #
 #--------------------------------------------------------------------------
 # Mandatory Software's Installation
@@ -94,7 +107,7 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; then \
     echo "alias phpunit='php -dzend_extension=xdebug.so /var/www/vendor/bin/phpunit'" >> ~/.bashrc \
 ;fi
 # ADD for REMOTE debugging
-COPY ./xdebug.ini /etc/php/7.0/cli/conf.d/xdebug.ini
+#COPY ./xdebug.ini /etc/php/7.0/cli/conf.d/xdebug.ini
 
 #####################################
 # ssh:
@@ -215,7 +228,7 @@ ARG INSTALL_AEROSPIKE_EXTENSION=true
 ENV INSTALL_AEROSPIKE_EXTENSION ${INSTALL_AEROSPIKE_EXTENSION}
 
 # Copy aerospike configration for remote debugging
-COPY ./aerospike.ini /etc/php/7.0/cli/conf.d/aerospike.ini
+#COPY ./aerospike.ini /etc/php/7.0/cli/conf.d/aerospike.ini
 
 RUN if [ ${INSTALL_AEROSPIKE_EXTENSION} = true ]; then \
     # Install the php aerospike extension
@@ -257,10 +270,12 @@ RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN usermod -u 33 www-data
+# Custom commands for history complete 
+COPY ./.inputrc /root/.inputrc
 
 # Set default work directory
 WORKDIR /var/www
 
 #RUN /usr/local/bin/composer.phar install
-RUN php artisan migrate
+#RUN php artisan migrate
 
