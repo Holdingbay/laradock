@@ -14,19 +14,23 @@ FROM laradock/workspace:1.2
 
 MAINTAINER Mahmoud Zalt <mahmoud@zalt.me>
 
-ADD ./99defaultrelease /etc/apt/apt.conf.d/99defaultrelease
-ADD ./stretch.list /etc/apt/sources.list.d/stretch.list
+##ADD ./99defaultrelease /etc/apt/apt.conf.d/99defaultrelease
+##ADD ./stretch.list /etc/apt/sources.list.d/stretch.list
+
+##RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010
+##RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8B48AD6246925553
 
 RUN apt-get update && apt-get install -y \ 
     php7.0-bcmath
 
 RUN apt-get clean
 
-RUN cp /usr/lib/php/20151012/bcmath.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/bcmath.so 
+##RUN cp /usr/lib/php/20151012/bcmath.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/bcmath.so 
 #COPY /usr/local/lib/php/extensions/no-debug-non-zts-20151012/bcmath.so /usr/lib/php/20151012/bcmath.so
 
+#/etc/php/7.0/mods-available/bcmath.ini
 COPY ./bcmath.ini /usr/local/etc/php/conf.d/bcmath.ini
-
+##COPY ./bcmath.ini /usr/share/php7.0-bcmath/bcmath/
 #
 #--------------------------------------------------------------------------
 # Mandatory Software's Installation
@@ -244,9 +248,9 @@ RUN if [ ${INSTALL_AEROSPIKE_EXTENSION} = true ]; then \
     && rm /tmp/aerospike-client-php.tar.gz \
 ;fi
 
-RUN if [ ${INSTALL_AEROSPIKE_EXTENSION} = false ]; then \
-    rm /etc/php/7.0/cli/conf.d/aerospike.ini \
-;fi
+#RUN if [ ${INSTALL_AEROSPIKE_EXTENSION} = false ]; then \
+#    rm /etc/php/7.0/cli/conf.d/aerospike.ini \
+#;fi
 
 #####################################
 # Non-root user : PHPUnit path
