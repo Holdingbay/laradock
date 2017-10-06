@@ -88,7 +88,7 @@ ADD ./laravel.ini /usr/local/etc/php/conf.d
 ADD ./laravel.pool.conf /usr/local/etc/php-fpm.d/
 
 # ADD when compile php files into the image not volume
-#ADD ./* /var/www/
+ADD ./* /var/www/
 
 RUN usermod -u 1000 www-data
 
