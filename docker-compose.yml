@@ -17,16 +17,21 @@ services:
             args:
                 - INSTALL_XDEBUG=false
                 - INSTALL_MONGO=false
-                - INSTALL_NODE=false
+                - INSTALL_NODE=true
+                - NODE_VERSION=stable
                 - INSTALL_YARN=false
                 - INSTALL_DRUSH=false
-                - INSTALL_AEROSPIKE_EXTENSION=false
+#                - INSTALL_AEROSPIKE_EXTENSION=false
+                - INSTALL_AEROSPIKE=false
+                - INSTALL_MSSQL=false
+                - INSTALL_LINUXBREW=false
+                - INSTALL_LARAVEL_ENVOY=false
                 - COMPOSER_GLOBAL_INSTALL=false
                 - INSTALL_WORKSPACE_SSH=false
                 - PUID=1000
                 - PGID=1000
-                - NODE_VERSION=stable
                 - TZ=UTC
+            dockerfile: Dockerfile-70
         volumes_from:
             - applications
         extra_hosts:
